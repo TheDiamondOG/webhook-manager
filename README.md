@@ -28,6 +28,10 @@ After open the start file then you are done.
 
 Linux and Mac
 
-Get the installer it should make a folder with the Script
+Get the installer run
+chmod +x install.sh
+then run
+./install.sh
+it should make a folder with the Script
 
 After open the start file then you are done.
