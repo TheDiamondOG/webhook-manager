@@ -30,11 +30,10 @@ Linux and Mac
 
 Get the installer run
 
+'''
 chmod +x install.sh
-
-then run
-
 ./install.sh
+'''
 
 it should make a folder with the Script
 
