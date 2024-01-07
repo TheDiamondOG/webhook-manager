@@ -10,12 +10,16 @@ def pause():
 def start():
     clear()
     global web_url
+    # Opens webhook file
     with open("webhook", "r") as web_url_file:
         web_url = web_url_file.read()
+    # Checks if it's a discord webhook url
     if web_url.startswith("https://discord.com/api/webhooks"):
+        # Function to check and if it is then go to the main menu
         web_checker(web_url)
         webhook_manager()
     else:
+        # For the first time this has been started or if you forgot to put your url in
         print("What is your webhook url")
         print("It needs to inclue the webhook token")
         web_url = input("URL: ")
@@ -23,10 +27,12 @@ def start():
         print("Do you want it saved?")
         saved = input("Save: ")
         if saved == "yes":
+            # Saves the URL locally
             with open("webhook", "w+") as web_url_file:
                 web_url_file.write(web_url)
         webhook_manager()
 
+# Checks to see if the webhook is real
 def web_checker(webhook_url):
     response = requests.get(web_url)
     if response.status_code == 404:
@@ -36,6 +42,7 @@ def web_checker(webhook_url):
     else:
         pass
 
+# Main Menu
 def webhook_manager():
     clear()
     print("------------Webhook Manager------------")
@@ -52,6 +59,7 @@ def webhook_manager():
     print("10. Delete Webhook")
     option_hand(input("Option: "))
 
+# Where all of the main menu options are handled
 def option_hand(option):
     clear()
     if option == "0":
@@ -78,10 +86,11 @@ def option_hand(option):
         delete_webhook()
 
     else:
+        # Someone did something dumb if this ran
         print(f"{option} is not a real option")
         pause()
 
-
+# Sends a message as the webhook
 def send_message():
     message = input("Message: ")
     data = {
@@ -97,6 +106,7 @@ def send_message():
         print(response.text)
     pause()
 
+# Sends a message as the webhook but embed
 def send_message_embed():
     title = input("Embed Title: ")
     clear
@@ -142,6 +152,7 @@ def send_message_embed():
         print(response.text)
     pause()
 
+# Delete the webhook
 def delete_webhook():
     print("Are you sure you want to delete this webhook?")
     mas = input("yes/no")
@@ -163,6 +174,7 @@ def delete_webhook():
         print("Webhook has not been deleted")
         pause
 
+# Webhook info not bot info I am too lazy to fix that
 def get_bot_info():
     print("Getting Info")
     response = requests.get(web_url)
@@ -177,6 +189,7 @@ def get_bot_info():
     webinf = response.json()
     clear()
     if webinf['type'] == 1:
+        # If the webhook is normal
         print("Webhook Name", webinf['name'])
         print("Webhook ID", webinf['id'])
         print("Bot Type: Incoming")
@@ -184,6 +197,7 @@ def get_bot_info():
         print("Server ID:", webinf['guild_id'])
         print("Channel ID:", webinf['channel_id'])
     elif webinf['type'] == 2:
+        # Announcement Sender
         print("Webhook Name", webinf['name'])
         print("Webhook ID", webinf['id'])
         print("Bot Type: Channel Follower")
@@ -193,13 +207,14 @@ def get_bot_info():
         print("Source Channel Name:", webinf['source_channel']['name'])
         print("Source Channel ID:", webinf['source_channel']['id'])
     elif webinf['type'] == 3:
+        # No clue why this is counted as a webhook in the discord docs
         print("Webhook Name:", webinf['name'])
         print("Webhook ID:", webinf['id'])
         print("Bot Type: Application")
         print("Application ID:", webinf['application_id'])
     pause()
 
-
+# Basicly webhook info but for the creator
 def get_owner_info():
     print("Getting Info")
     response = requests.get(web_url)
@@ -214,16 +229,19 @@ def get_owner_info():
     webinf = response.json()
     clear()
     if webinf['type'] == 1:
+        # Normal webhook
         print("Owner Display Name:", webinf['user']['global_name'])
         print("Owner Username:", webinf['user']['username'])
         print("Owner ID:", webinf['user']['id'])
         print("Owner Discriminator:", webinf['user']['discriminator'])
         print("Owner Public Flags:", webinf['user']['public_flags'])
         print("Owner Banner Color:", webinf['user']['banner_color'])
+    # Don't ask me where type 2 is
     elif webinf['type'] == 3:
         print("You can not get owner info with a type 3 webhook AKA an application webhook")
     pause()
 
+# Edit webhook messages
 def edit_message():
     message_id = input("Message ID: ")
     nmessage = input("New Message: ")
@@ -239,6 +257,7 @@ def edit_message():
         print(response.text)
     pause()
 
+# Edit webhook messages but embed and longer
 def edit_embed_message():
     message_id = input("Message ID: ")
     title = input("Embed Title: ")
@@ -285,6 +304,7 @@ def edit_embed_message():
         print(response.text)
     pause()
 
+# Deletes only webhook messages
 def delete_message():
     message_id = input("Message ID: ")
     response = requests.delete(f"{web_url}/messages/{message_id}")
@@ -296,6 +316,7 @@ def delete_message():
         print(response.text)
     pause()
 
+# Edits the webhook... Ya only use this if you wanted to make your life harder by a little bit
 def edit_webhook():
     print("Press enter if you do not want to change that part")
     nname = input("New Name: ")
@@ -328,6 +349,7 @@ def edit_webhook():
         print(response.text)
     pause()
 
+# Get a webhook message
 def get_message():
     message_id = input("Message ID: ")
     response = requests.get(f"{web_url}/messages/{message_id}")
@@ -340,7 +362,7 @@ def get_message():
         print(response.text)
     pause()
 
-start()
+start() # Nice got as meny lines as days in a year
 
 while True:
     webhook_manager()
